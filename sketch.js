@@ -21,7 +21,7 @@ function preload(){
   
   CloudImage = loadImage("cloud-1.png");
   
-  groundImage = loadImage("ground.png");
+  groundImage = loadImage("Ground3.png");
   
   CactusImage1 = loadImage("obstacle1-1.png");
   CactusImage2 = loadImage("obstacle2-1.png");
@@ -42,10 +42,10 @@ function preload(){
 
 function setup(){
   
-  createCanvas(1200,400);
+  createCanvas(windowWidth,windowHeight);
   
   // creating trex
-  trex = createSprite(50,160,20,50);
+  trex = createSprite(50,height - 70,20,50);
   trex.addAnimation("running", trex_running);
   trex.addAnimation("Collide", trexCollided);
   //trex.debug = true;
@@ -59,7 +59,8 @@ function setup(){
   
   ground = createSprite(width/2,height,width,2);
   ground.addImage(groundImage);
-  ground.x = ground.width/2;
+  ground.x = width/2;
+  //ground.velocityX = -(4 + 1.5*Score/100);
   //ground.debug = true;
   
   InvisGround = createSprite(width/2,(height) - 50,width,2);
@@ -88,7 +89,10 @@ function draw(){
   //logging the y position of the trex
   //console.log(trex.y)
   
-  text("Score:" + Score,525,20);
+  textSize(20);
+  stroke("darkblue")
+  strokeWeight(2);
+  text("Score:" + Score,width-150,height/8);
   
   // console.log(frameCount);
   //console.log(frameRate());
@@ -98,7 +102,7 @@ function draw(){
     gameOver.visible = false;
     ground.velocityX = -(4 + 1.5*Score/100);
     if(ground.x < 0){
-      ground.x = 300;
+      ground.x = width/2;
     }
     
     Score = Score + Math.round(getFrameRate()/57);
@@ -160,7 +164,7 @@ function draw(){
 
 function SpawnClouds(){
   if(frameCount%120 === 0){  
-    Clouds = createSprite(700,40,10,10);
+    Clouds = createSprite(width + 100,height - 600,10,10);
     Clouds.addImage(CloudImage);
     
     var CloudsSize = Math.round(random(0.5,2))
@@ -168,14 +172,14 @@ function SpawnClouds(){
 
     Clouds.velocityX = -3;
     
-    Clouds.y = Math.round(random(10,125));
+    Clouds.y = Math.round(random(10,height - 150));
     //console.log(Math.round(random(1,100)));
     
     trex.depth = Clouds.depth + 1;
     //console.log(trex.depth);
     //console.log(Clouds.depth);
     
-    Clouds.lifetime = 233;
+    Clouds.lifetime = width/Clouds.velocityX;
     CloudsGroup.add(Clouds);
     
     //Clouds.debug = true;
@@ -187,42 +191,6 @@ function SpawnCactus(){
     RandomNumber = Math.round(random(1,4));
     //RandomNumber2 = Math.round(random(-50,51));
     Cactus = createSprite(width,height-90,10,10);
-    
-   /* if(RandomNumber === 1){
-    Cactus.addImage(CactusImage1);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }
-
-    if(RandomNumber === 2){
-    Cactus.addImage(CactusImage2);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }
-    
-    if(RandomNumber === 3){
-    Cactus.addImage(CactusImage3);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }
-    
-    if(RandomNumber === 4){
-    Cactus.addImage(CactusImage4);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }
-    
-    if(RandomNumber === 5){
-    Cactus.addImage(CactusImage5);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }
-    
-    if(RandomNumber === 6){
-    Cactus.addImage(CactusImage6);
-    Cactus.scale = 0.5;
-    Cactus.velocityX = -2;
-    }*/
     
     switch(RandomNumber){
       case 1: Cactus.addImage(CactusImage1);
@@ -241,10 +209,6 @@ function SpawnCactus(){
               Cactus.scale = 0.2;
               console.log(Cactus.width);
               break;
-      /*case 5: Cactus.addImage(CactusImage5);
-              break;
-      case 6: Cactus.addImage(CactusImage6);
-              break;*/
       default: break;
     }
     
@@ -253,7 +217,7 @@ function SpawnCactus(){
     
     trex.depth = Cactus.depth + 1;
   
-    Cactus.lifetime = 350;  
+    Cactus.lifetime = width/Cactus.velocityX;  
     
     CactusGroup.add(Cactus);
     
